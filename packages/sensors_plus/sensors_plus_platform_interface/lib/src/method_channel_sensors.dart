@@ -85,9 +85,12 @@ class MethodChannelSensors extends SensorsPlatform {
       microseconds = 0;
     }
     _methodChannel.invokeMethod('setGyroscopeSamplingPeriod', microseconds);
-    _gyroscopeEvents ??=
+     _gyroscopeEvents ??=
         _gyroscopeEventChannel.receiveBroadcastStream().map((dynamic event) {
-      final list = event.cast<double>();
+      final list = (event as List).map((e){
+              return e is double ? e: double.parse(e.toString());
+            }).toList();
+      // final list = event.cast<double>();
       return GyroscopeEvent(
         list[0]!,
         list[1]!,
